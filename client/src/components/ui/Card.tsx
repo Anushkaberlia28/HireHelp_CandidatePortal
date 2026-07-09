@@ -1,27 +1,30 @@
 import type { ReactNode } from "react";
 
-interface Props {
+interface CardProps {
     children: ReactNode;
+    className?: string;
 }
 
 export default function Card({
     children,
-}: Props) {
+    className = "",
+}: CardProps) {
     return (
         <div
-            className="
-      rounded-2xl
-      bg-slate-900/50
-      border
-      border-slate-800/50
-      shadow-xl
-      p-6
-      hover:border-blue-500/50
-      hover:shadow-xl
-      hover:shadow-blue-500/10
-      transition-all
-      duration-300
-    "
+            className={`
+                rounded-3xl
+                border
+                border-slate-800
+                bg-slate-900
+                p-6
+                shadow-xl
+                transition-all
+                duration-300
+                hover:-translate-y-1
+                hover:border-blue-500/40
+                hover:shadow-blue-500/10
+                ${className}
+            `}
         >
             {children}
         </div>

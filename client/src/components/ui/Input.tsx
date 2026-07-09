@@ -1,8 +1,8 @@
 import type { InputHTMLAttributes } from "react";
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+type Props = InputHTMLAttributes<HTMLInputElement> & {
     label?: string;
-}
+};
 
 export default function Input({
     label,
@@ -39,3 +39,4 @@ export default function Input({
         </div>
     );
 }
+
