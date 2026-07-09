@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import AuthLayout from "@/layouts/AuthLayout";
 import DashboardLayout from "@/layouts/DashboardLayout";
@@ -17,26 +17,24 @@ import Settings from "@/pages/Settings";
 
 export default function AppRouter() {
     return (
-        <BrowserRouter>
-            <Routes>
-                {/* Public Routes */}
-                <Route element={<AuthLayout />}>
-                    <Route path="/" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                </Route>
+        <Routes>
+            {/* Public Routes */}
+            <Route element={<AuthLayout />}>
+                <Route path="/" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+            </Route>
 
-                {/* Protected Routes */}
-                <Route element={<DashboardLayout />}>
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/resume" element={<Resume />} />
-                    <Route path="/jobs" element={<Jobs />} />
-                    <Route path="/applications" element={<Applications />} />
-                    <Route path="/interviews" element={<Interviews />} />
-                    <Route path="/notifications" element={<Notifications />} />
-                    <Route path="/settings" element={<Settings />} />
-                </Route>
-            </Routes>
-        </BrowserRouter>
+            {/* Protected Routes */}
+            <Route element={<DashboardLayout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/resume" element={<Resume />} />
+                <Route path="/jobs" element={<Jobs />} />
+                <Route path="/applications" element={<Applications />} />
+                <Route path="/interviews" element={<Interviews />} />
+                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/settings" element={<Settings />} />
+            </Route>
+        </Routes>
     );
 }

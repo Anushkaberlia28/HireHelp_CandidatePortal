@@ -1,23 +1,36 @@
-import { forwardRef } from "react";
 import type { InputHTMLAttributes } from "react";
-import clsx from "clsx";
 
-const Input = forwardRef<
-    HTMLInputElement,
-    InputHTMLAttributes<HTMLInputElement>
->(({ className, ...props }, ref) => {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
+    label?: string;
+}
+
+export default function Input({
+    label,
+    ...props
+}: Props) {
     return (
-        <input
-            ref={ref}
-            {...props}
-            className={clsx(
-                "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none",
-                className
+        <div className="space-y-2">
+            {label && (
+                <label className="text-sm text-slate-300">
+                    {label}
+                </label>
             )}
-        />
+
+            <input
+                {...props}
+                className="
+          w-full
+          rounded-xl
+          border
+          border-slate-600
+          bg-slate-800
+          px-4
+          py-3
+          text-white
+          outline-none
+          focus:border-blue-500
+        "
+            />
+        </div>
     );
-});
-
-Input.displayName = "Input";
-
-export default Input;
+}

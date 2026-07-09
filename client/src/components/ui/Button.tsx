@@ -2,25 +2,38 @@ import type { ButtonHTMLAttributes } from "react";
 import clsx from "clsx";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    loading?: boolean;
+    variant?: "primary" | "secondary" | "danger";
+    fullWidth?: boolean;
 }
 
 export default function Button({
     children,
+    variant = "primary",
+    fullWidth = false,
     className,
-    loading,
     ...props
 }: ButtonProps) {
     return (
         <button
-            {...props}
-            disabled={loading || props.disabled}
             className={clsx(
-                "w-full rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50",
+                "rounded-xl px-5 py-3 font-semibold transition-all duration-300",
+
+                variant === "primary" &&
+                "bg-blue-600 hover:bg-blue-700 text-white",
+
+                variant === "secondary" &&
+                "bg-slate-700 hover:bg-slate-600 text-white",
+
+                variant === "danger" &&
+                "bg-red-600 hover:bg-red-700 text-white",
+
+                fullWidth && "w-full",
+
                 className
             )}
+            {...props}
         >
-            {loading ? "Loading..." : children}
+            {children}
         </button>
     );
 }
