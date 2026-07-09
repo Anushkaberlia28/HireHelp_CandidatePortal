@@ -1,23 +1,36 @@
-import api from "./axios";
+import api from "./api";
 
-export const login = async (email: string, password: string) => {
+import type {
+    LoginRequest,
+    RegisterRequest,
+    AuthResponse,
+} from "@/types/auth";
 
-    const response = await api.post("/auth/login", {
+export const login = async (
+    data: LoginRequest
+): Promise<AuthResponse> => {
 
-        email,
-
-        password,
-
-    });
+    const response = await api.post<AuthResponse>(
+        "/auth/login",
+        data
+    );
 
     return response.data;
-
 };
 
-export const register = async (data: unknown) => {
+export const register = async (
+    data: RegisterRequest
+): Promise<AuthResponse> => {
 
-    const response = await api.post("/auth/register", data);
+    const response = await api.post<AuthResponse>(
+        "/auth/register",
+        data
+    );
 
     return response.data;
+};
 
+export default {
+    login,
+    register,
 };

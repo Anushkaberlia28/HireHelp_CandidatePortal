@@ -24,33 +24,33 @@ export default function InterviewCard({
     meetingLink,
 }: Props) {
     return (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 hover:border-blue-500 transition">
+        <div className="rounded-2xl border border-slate-800/50 bg-slate-900/50 p-6 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:scale-[1.02] group">
 
             <div className="flex justify-between">
 
                 <div>
 
-                    <h2 className="text-xl font-bold text-white">
+                    <h2 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
                         {role}
                     </h2>
 
-                    <div className="mt-3 flex items-center gap-2 text-slate-400">
-                        <Building2 size={16} />
+                    <div className="mt-3 flex items-center gap-2 text-slate-400 group-hover:text-blue-400 transition-colors">
+                        <Building2 size={16} className="group-hover:scale-110 transition-transform" />
                         {company}
                     </div>
 
-                    <div className="mt-2 flex items-center gap-2 text-slate-400">
-                        <User size={16} />
+                    <div className="mt-2 flex items-center gap-2 text-slate-400 group-hover:text-blue-400 transition-colors">
+                        <User size={16} className="group-hover:scale-110 transition-transform" />
                         {interviewer}
                     </div>
 
-                    <div className="mt-2 flex items-center gap-2 text-slate-400">
-                        <Calendar size={16} />
+                    <div className="mt-2 flex items-center gap-2 text-slate-400 group-hover:text-blue-400 transition-colors">
+                        <Calendar size={16} className="group-hover:scale-110 transition-transform" />
                         {date}
                     </div>
 
-                    <div className="mt-2 flex items-center gap-2 text-slate-400">
-                        <Clock size={16} />
+                    <div className="mt-2 flex items-center gap-2 text-slate-400 group-hover:text-blue-400 transition-colors">
+                        <Clock size={16} className="group-hover:scale-110 transition-transform" />
                         {time}
                     </div>
 
@@ -64,7 +64,7 @@ export default function InterviewCard({
                     href={meetingLink}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-white hover:bg-blue-700"
+                    className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-5 py-2 text-white hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-105"
                 >
                     <Video size={18} />
                     Join Meeting

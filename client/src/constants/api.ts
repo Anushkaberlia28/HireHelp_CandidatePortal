@@ -1,5 +1,5 @@
 export const API = {
-    BASE_URL: "http://localhost:5000/api",
+    BASE_URL: "http://localhost:5001/api",
 
     AUTH: {
         LOGIN: "/auth/login",
@@ -8,3 +8,4 @@ export const API = {
         PROFILE: "/auth/profile",
     },
 };
+

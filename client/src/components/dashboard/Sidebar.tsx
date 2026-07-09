@@ -9,46 +9,47 @@ import {
     Settings,
     LogOut,
 } from "lucide-react";
+
 import { NavLink } from "react-router-dom";
 
 const menu = [
     {
-        name: "Dashboard",
+        title: "Dashboard",
         icon: LayoutDashboard,
         path: "/dashboard",
     },
     {
-        name: "Profile",
+        title: "Profile",
         icon: User,
         path: "/profile",
     },
     {
-        name: "Resume",
+        title: "Resume",
         icon: FileText,
         path: "/resume",
     },
     {
-        name: "Jobs",
+        title: "Jobs",
         icon: BriefcaseBusiness,
         path: "/jobs",
     },
     {
-        name: "Applications",
+        title: "Applications",
         icon: ClipboardList,
         path: "/applications",
     },
     {
-        name: "Interviews",
+        title: "Interviews",
         icon: CalendarDays,
         path: "/interviews",
     },
     {
-        name: "Notifications",
+        title: "Notifications",
         icon: Bell,
         path: "/notifications",
     },
     {
-        name: "Settings",
+        title: "Settings",
         icon: Settings,
         path: "/settings",
     },
@@ -56,45 +57,91 @@ const menu = [
 
 export default function Sidebar() {
     return (
-        <aside className="w-72 bg-slate-900 border-r border-slate-800 flex flex-col">
-            <div className="p-8">
-                <h1 className="text-3xl font-bold text-blue-500">
+        <aside className="flex h-full w-72 flex-col bg-slate-900/95 border-r border-slate-800/50">
+
+            {/* Logo */}
+
+            <div className="border-b border-slate-800/50 px-8 py-8 bg-gradient-to-r from-blue-600/10 to-transparent">
+
+                <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                     HireHelp
                 </h1>
 
-                <p className="text-slate-400 text-sm mt-2">
+                <p className="mt-1 text-sm text-slate-400">
                     Candidate Portal
                 </p>
+
             </div>
 
-            <nav className="flex-1 px-4 space-y-2">
+            {/* Navigation */}
+
+            <nav className="flex-1 space-y-2 px-4 py-6">
+
                 {menu.map((item) => {
+
                     const Icon = item.icon;
 
                     return (
                         <NavLink
-                            key={item.name}
+                            key={item.title}
                             to={item.path}
                             className={({ isActive }) =>
-                                `flex items-center gap-3 rounded-xl px-4 py-3 transition ${isActive
-                                    ? "bg-blue-600 text-white"
-                                    : "text-slate-300 hover:bg-slate-800"
-                                }`
+                                `
+                                flex items-center gap-4 rounded-xl px-4 py-3
+                                transition-all duration-300 ease-out
+                                ${isActive
+                                    ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/25"
+                                    : "text-slate-400 hover:bg-slate-800/50 hover:text-white hover:scale-[1.02]"
+                                }
+                                `
                             }
                         >
-                            <Icon size={20} />
-                            {item.name}
+                            <Icon size={20} className={item.path === "/dashboard" ? "animate-pulse" : ""} />
+
+                            <span className="font-medium">
+                                {item.title}
+                            </span>
+
                         </NavLink>
                     );
                 })}
+
             </nav>
 
-            <div className="p-5 border-t border-slate-800">
-                <button className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-red-400 hover:bg-slate-800">
-                    <LogOut size={20} />
+            {/* User */}
+
+            <div className="border-t border-slate-800/50 p-5 bg-gradient-to-t from-slate-950/50 to-transparent">
+
+                <div className="mb-4 flex items-center gap-3">
+
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-lg font-bold text-white shadow-lg shadow-blue-500/30">
+                        A
+                    </div>
+
+                    <div>
+
+                        <h3 className="font-semibold text-white">
+                            Candidate
+                        </h3>
+
+                        <p className="text-sm text-slate-400">
+                            candidate@mail.com
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-4 py-3 font-medium text-white transition-all duration-300 hover:shadow-lg hover:shadow-red-500/25 hover:scale-[1.02]">
+
+                    <LogOut size={18} />
+
                     Logout
+
                 </button>
+
             </div>
+
         </aside>
     );
 }

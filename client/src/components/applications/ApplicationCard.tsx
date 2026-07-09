@@ -17,27 +17,27 @@ export default function ApplicationCard({
     status,
 }: Props) {
     return (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 hover:border-blue-500 transition">
+        <div className="rounded-2xl border border-slate-800/50 bg-slate-900/50 p-6 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:scale-[1.02] group">
 
             <div className="flex items-start justify-between">
 
                 <div>
-                    <h2 className="text-xl font-bold text-white">
+                    <h2 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
                         {role}
                     </h2>
 
-                    <div className="mt-2 flex items-center gap-2 text-slate-400">
-                        <Building2 size={16} />
+                    <div className="mt-2 flex items-center gap-2 text-slate-400 group-hover:text-blue-400 transition-colors">
+                        <Building2 size={16} className="group-hover:scale-110 transition-transform" />
                         {company}
                     </div>
 
-                    <div className="mt-2 flex items-center gap-2 text-slate-400">
-                        <MapPin size={16} />
+                    <div className="mt-2 flex items-center gap-2 text-slate-400 group-hover:text-blue-400 transition-colors">
+                        <MapPin size={16} className="group-hover:scale-110 transition-transform" />
                         {location}
                     </div>
 
-                    <div className="mt-2 flex items-center gap-2 text-slate-400">
-                        <CalendarDays size={16} />
+                    <div className="mt-2 flex items-center gap-2 text-slate-400 group-hover:text-blue-400 transition-colors">
+                        <CalendarDays size={16} className="group-hover:scale-110 transition-transform" />
                         Applied {appliedDate}
                     </div>
                 </div>
@@ -47,11 +47,11 @@ export default function ApplicationCard({
 
             <div className="mt-6 flex gap-3">
 
-                <button className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+                <button className="rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-2 text-white hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-105">
                     View
                 </button>
 
-                <button className="rounded-lg border border-slate-700 px-4 py-2 text-white hover:bg-slate-800">
+                <button className="rounded-lg border border-slate-700/50 px-4 py-2 text-white hover:bg-slate-800/50 hover:border-slate-600 transition-all duration-300">
                     Withdraw
                 </button>
 

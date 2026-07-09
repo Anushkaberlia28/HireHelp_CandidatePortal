@@ -1,0 +1,14 @@
+{
+    "name": "HireHelp_CandidatePortal",
+    "private": true,
+    "version": "0.0.0",
+    "workspaces": [
+        "client",
+        "server"
+    ],
+    "scripts": {
+        "lint": "npm run lint -w client && npm run lint -w server",
+        "test": "npm test -w client && npm test -w server",
+        "dev": "npm run dev -w client"
+    }
+}

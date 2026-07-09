@@ -1,35 +1,96 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+
+import { useAppDispatch } from "@/store/hooks";
+import { loginStart, loginSuccess, loginFailure } from "@/store/authSlice";
+import { login } from "@/services/auth.api";
+import type { LoginRequest } from "@/types/auth";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import PasswordInput from "@/components/ui/PasswordInput";
+
 export default function LoginForm() {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const [serverError, setServerError] = useState<string | null>(null);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<LoginRequest>({
+        defaultValues: {
+            email: "",
+            password: "",
+        },
+    });
+
+    async function onSubmit(values: LoginRequest) {
+        setServerError(null);
+        dispatch(loginStart());
+
+        try {
+            const response = await login(values);
+
+            dispatch(
+                loginSuccess({
+                    user: response.user,
+                    token: response.accessToken,
+                })
+            );
+
+            navigate("/dashboard");
+        } catch (error) {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "Login failed. Please try again.";
+
+            setServerError(message);
+            dispatch(loginFailure(message));
+        }
+    }
+
     return (
-        <form className="space-y-4">
-            <div>
-                <label className="mb-1 block text-sm font-medium">
-                    Email
-                </label>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {serverError && (
+                <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-200">
+                    {serverError}
+                </div>
+            )}
 
-                <input
-                    type="email"
-                    className="w-full rounded-md border p-3"
-                    placeholder="Enter email"
-                />
-            </div>
+            <Input
+                label="Email Address"
+                type="email"
+                placeholder="Enter your email"
+                className="bg-slate-950"
+                {...register("email", {
+                    required: "Email is required.",
+                    pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: "Please enter a valid email address.",
+                    },
+                })}
+            />
+            {errors.email && (
+                <p className="text-sm text-rose-400">{errors.email.message}</p>
+            )}
 
-            <div>
-                <label className="mb-1 block text-sm font-medium">
-                    Password
-                </label>
+            <PasswordInput
+                label="Password"
+                placeholder="Enter your password"
+                {...register("password", {
+                    required: "Password is required.",
+                })}
+            />
+            {errors.password && (
+                <p className="text-sm text-rose-400">{errors.password.message}</p>
+            )}
 
-                <input
-                    type="password"
-                    className="w-full rounded-md border p-3"
-                    placeholder="Enter password"
-                />
-            </div>
-
-            <button
-                className="w-full rounded-md bg-blue-600 py-3 text-white hover:bg-blue-700"
-            >
-                Login
-            </button>
+            <Button type="submit" loading={isSubmitting}>
+                Sign in
+            </Button>
         </form>
     );
 }

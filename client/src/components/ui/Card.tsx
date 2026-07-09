@@ -11,11 +11,16 @@ export default function Card({
         <div
             className="
       rounded-2xl
-      bg-slate-900
+      bg-slate-900/50
       border
-      border-slate-700
+      border-slate-800/50
       shadow-xl
       p-6
+      hover:border-blue-500/50
+      hover:shadow-xl
+      hover:shadow-blue-500/10
+      transition-all
+      duration-300
     "
         >
             {children}
