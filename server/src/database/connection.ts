@@ -1,16 +1,41 @@
+import dotenv from "dotenv";
+
+dotenv.config();
 import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
 const { Pool } = pg;
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+let pool: pg.Pool | null = null;
+let dbInstance: ReturnType<typeof drizzle> | null = null;
 
-export const db = drizzle(pool);
+export const getPool = () => {
+  if (!pool) {
+    pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+    });
+  }
+  return pool;
+};
+
+export const getDb = () => {
+  if (!dbInstance) {
+    dbInstance = drizzle(getPool());
+  }
+  return dbInstance;
+};
+
+// Legacy export for backward compatibility - now uses lazy initialization
+const dbHandler = {
+  get(_target: any, prop: string | symbol) {
+    return getDb()[prop as keyof ReturnType<typeof drizzle>];
+  }
+};
+
+export const db = new Proxy({}, dbHandler) as any;
 
 export const connectDb = async () => {
   try {
-    await pool.connect();
+    await getPool().connect();
     console.log('Database connected successfully');
     return true;
   } catch (error) {
@@ -21,6 +46,8 @@ export const connectDb = async () => {
 };
 
 export const disconnectDb = async () => {
-  await pool.end();
-  console.log('Database disconnected');
+  if (pool) {
+    await pool.end();
+    console.log('Database disconnected');
+  }
 };

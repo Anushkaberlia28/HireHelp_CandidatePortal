@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { resumeController } from '../resume.controller';
-import { authenticate } from '../../../common/middleware/auth';
+import { resumeController } from '../resume.controller.js';
+import { authenticate } from '../../../common/middleware/auth.js';
 
 const router = Router();
 

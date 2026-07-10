@@ -1,5 +1,5 @@
-import { interviewStatusRepository } from './interview-status.repository';
-import { UpdateInterviewStatusInput } from './interview-status.schema';
+import { interviewStatusRepository } from './interview-status.repository.js';
+import { UpdateInterviewStatusInput } from './interview-status.schema.js';
 
 export class InterviewStatusService {
   async list(candidateId: number) {

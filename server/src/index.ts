@@ -1,21 +1,24 @@
-import express from 'express';
-import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-import router from './routes';
-import { errorHandler, notFoundHandler } from './common/middleware/error-handler';
-import { connectDb } from './database/connection';
+// Load environment variables BEFORE any other imports
+const envPath = path.join(__dirname, '../../.env');
+dotenv.config({ path: envPath });
+
+import express from 'express';
+import cors from 'cors';
+
+import router from './routes.js';
+
+import { errorHandler, notFoundHandler } from './common/middleware/error-handler.js';
 // import { connectProducer, disconnectProducer } from './modules/events/kafka-producer';
 // import { connectConsumer, disconnectConsumer } from './modules/events/kafka-consumer';
 
 // Silence Kafka partitioner warning
 // process.env.KAFKAJS_NO_PARTITIONER_WARNING = '1';
-
-dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -33,6 +36,8 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 async function start() {
+  // Dynamic import to ensure dotenv is loaded before connection module
+  const { connectDb } = await import('./database/connection');
   const dbOk = await connectDb();
   console.log(dbOk ? 'DB connected' : 'DB not connected');
 

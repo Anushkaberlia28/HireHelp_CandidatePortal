@@ -1,5 +1,5 @@
-import { applicationsRepository } from './applications.repository';
-import { ApplyJobInput } from './applications.schema';
+import { applicationsRepository } from './applications.repository.js';
+import { ApplyJobInput } from './applications.schema.js';
 
 export class ApplicationsService {
   async list(candidateId: number) {

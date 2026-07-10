@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAppDispatch } from "@/store/hooks";
 import { loginStart, loginSuccess, loginFailure } from "@/store/authSlice";
-import { login } from "@/services/auth.api";
+import { login } from "@/api/auth.api";
 import type { LoginRequest } from "@/types/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";

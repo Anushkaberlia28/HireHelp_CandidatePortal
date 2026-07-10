@@ -6,7 +6,7 @@ import PreparationCard from "@/components/interviews/PreparationCard";
 import InterviewStats from "@/components/interviews/InterviewStats";
 import InterviewTimeline from "@/components/interviews/InterviewTimeline";
 import Loader from "@/components/ui/Loader";
-import { getInterviews, getInterviewStats } from "@/services/interviews.api";
+import { getInterviews, getInterviewStats } from "@/api/interviews.api";
 import type { Interview, InterviewStats as InterviewStatsType } from "@/types";
 
 export default function Interviews() {

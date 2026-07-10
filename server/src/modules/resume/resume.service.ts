@@ -1,5 +1,5 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { resumeRepository } from './resume.repository';
+import { resumeRepository } from './resume.repository.js';
 // import { publishResumeUploaded } from '../events/kafka-producer';
 import { randomUUID } from 'crypto';
 

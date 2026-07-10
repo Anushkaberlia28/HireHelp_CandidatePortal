@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { interviewStatusController } from '../interview-status.controller';
-import { authenticate } from '../../../common/middleware/auth';
-import { validate } from '../../../common/middleware/validate';
-import { updateInterviewStatusSchema } from '../interview-status.schema';
+import { interviewStatusController } from '../interview-status.controller.js';
+import { authenticate } from '../../../common/middleware/auth.js';
+import { validate } from '../../../common/middleware/validate.js';
+import { updateInterviewStatusSchema } from '../interview-status.schema.js';
 
 const router = Router();
 

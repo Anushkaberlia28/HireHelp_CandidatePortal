@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { notificationsController } from '../notifications.controller';
-import { authenticate } from '../../../common/middleware/auth';
-import { validate } from '../../../common/middleware/validate';
-import { markAsReadSchema } from '../notifications.schema';
+import { notificationsController } from '../notifications.controller.js';
+import { authenticate } from '../../../common/middleware/auth.js';
+import { validate } from '../../../common/middleware/validate.js';
+import { markAsReadSchema } from '../notifications.schema.js';
 
 const router = Router();
 

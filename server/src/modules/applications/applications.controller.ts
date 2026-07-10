@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { applicationsService } from './applications.service';
-import { ApplyJobInput } from './applications.schema';
+import { applicationsService } from './applications.service.js';
+import { ApplyJobInput } from './applications.schema.js';
 
 export class ApplicationsController {
   async list(req: Request, res: Response) {

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { profileController } from '../profile.controller';
-import { authenticate } from '../../../common/middleware/auth';
-import { validate } from '../../../common/middleware/validate';
-import { updateProfileSchema, experienceSchema, educationSchema, skillSchema } from '../profile.schema';
+import { profileController } from '../profile.controller.js';
+import { authenticate } from '../../../common/middleware/auth.js';
+import { validate } from '../../../common/middleware/validate.js';
+import { updateProfileSchema, experienceSchema, educationSchema, skillSchema } from '../profile.schema.js';
 
 const router = Router();
 

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { applicationsController } from '../applications.controller';
-import { authenticate } from '../../../common/middleware/auth';
-import { validate } from '../../../common/middleware/validate';
-import { applyJobSchema } from '../applications.schema';
+import { applicationsController } from '../applications.controller.js';
+import { authenticate } from '../../../common/middleware/auth.js';
+import { validate } from '../../../common/middleware/validate.js';
+import { applyJobSchema } from '../applications.schema.js';
 
 const router = Router();
 

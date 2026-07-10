@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { notificationsService } from './notifications.service';
-import { MarkAsReadInput } from './notifications.schema';
+import { notificationsService } from './notifications.service.js';
+import { MarkAsReadInput } from './notifications.schema.js';
 
 export class NotificationsController {
   async list(req: Request, res: Response) {

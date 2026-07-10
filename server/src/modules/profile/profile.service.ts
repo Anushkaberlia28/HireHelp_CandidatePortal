@@ -1,5 +1,5 @@
-import { profileRepository } from './profile.repository';
-import { UpdateProfileInput, ExperienceInput, EducationInput, SkillInput } from './profile.schema';
+import { profileRepository } from './profile.repository.js';
+import { UpdateProfileInput, ExperienceInput, EducationInput, SkillInput } from './profile.schema.js';
 
 export class ProfileService {
   async getProfile(candidateId: number) {

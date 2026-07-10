@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 
 import { useAppDispatch } from "@/store/hooks";
 import { loginStart, loginSuccess, loginFailure } from "@/store/authSlice";
-import { register } from "@/services/auth.api";
+import { register } from "@/api/auth.api";
 import type { RegisterRequest } from "@/types/auth";
 
 import Card from "@/components/ui/Card";

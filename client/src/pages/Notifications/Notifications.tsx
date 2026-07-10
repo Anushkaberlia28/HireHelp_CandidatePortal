@@ -8,7 +8,7 @@ import {
     getNotifications,
     getNotificationStats,
     markAllNotificationsRead,
-} from "@/services/notifications.api";
+} from "@/api/notifications.api";
 import type { Notification, NotificationStats as NotificationStatsType } from "@/types";
 
 export default function Notifications() {

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import PageTitle from "@/components/ui/PageTitle";
 import ApplicationTable from "@/components/applications/ApplicationTable";
 import Loader from "@/components/ui/Loader";
-import { getApplications } from "@/services/applications.api";
+import { getApplications } from "@/api/applications.api";
 import type { Application } from "@/types";
 
 export default function Applications() {

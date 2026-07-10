@@ -6,7 +6,7 @@ import SkillsCard from "@/components/profile/SkillsCard";
 import EducationCard from "@/components/profile/EducationCard";
 import ExperienceCard from "@/components/profile/ExperienceCard";
 import Loader from "@/components/ui/Loader";
-import { getProfile } from "@/services/profile.api";
+import { getProfile } from "@/api/profile.api";
 import type { Profile } from "@/types";
 
 export default function Profile() {

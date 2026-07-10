@@ -1,5 +1,5 @@
-import { notificationsRepository } from './notifications.repository';
-import { MarkAsReadInput } from './notifications.schema';
+import { notificationsRepository } from './notifications.repository.js';
+import { MarkAsReadInput } from './notifications.schema.js';
 
 export class NotificationsService {
   async list(candidateId: number) {

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { profileService } from './profile.service';
-import { UpdateProfileInput, ExperienceInput, EducationInput, SkillInput } from './profile.schema';
+import { profileService } from './profile.service.js';
+import { UpdateProfileInput, ExperienceInput, EducationInput, SkillInput } from './profile.schema.js';
 
 export class ProfileController {
   async getProfile(req: Request, res: Response) {

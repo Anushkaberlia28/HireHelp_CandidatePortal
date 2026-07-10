@@ -15,7 +15,7 @@ import NotificationsPanel from "@/components/dashboard/NotificationsPanel";
 import Card from "@/components/ui/Card";
 import PageTitle from "@/components/ui/PageTitle";
 import Loader from "@/components/ui/Loader";
-import { getDashboard } from "@/services/dashboard.api";
+import { getDashboard } from "@/api/dashboard.api";
 import type { DashboardData } from "@/types";
 
 export default function Dashboard() {

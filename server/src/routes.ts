@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import authRouter from './modules/auth/routes/auth.routes';
-import jobsRouter from './modules/jobs/routes/jobs.routes';
-import interviewStatusRouter from './modules/interview-status/routes/interview-status.routes';
-import applicationsRouter from './modules/applications/routes/applications.routes';
-import notificationsRouter from './modules/notifications/routes/notifications.routes';
-import profileRouter from './modules/profile/routes/profile.routes';
-import resumeRouter from './modules/resume/routes/resume.routes';
-import dashboardRouter from './modules/dashboard/routes/dashboard.routes';
+import authRouter from './modules/auth/routes/auth.routes.js';
+import jobsRouter from './modules/jobs/routes/jobs.routes.js';
+import interviewStatusRouter from './modules/interview-status/routes/interview-status.routes.js';
+import applicationsRouter from './modules/applications/routes/applications.routes.js';
+import notificationsRouter from './modules/notifications/routes/notifications.routes.js';
+import profileRouter from './modules/profile/routes/profile.routes.js';
+import resumeRouter from './modules/resume/routes/resume.routes.js';
+import dashboardRouter from './modules/dashboard/routes/dashboard.routes.js';
 
 const router = Router();
 

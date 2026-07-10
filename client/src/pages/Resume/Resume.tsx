@@ -10,7 +10,7 @@ import {
     getResume,
     getResumeAnalytics,
     uploadResume,
-} from "@/services/resume.api";
+} from "@/api/resume.api";
 import type { Resume, ResumeAnalytics as ResumeAnalyticsType } from "@/types";
 
 export default function ResumePage() {

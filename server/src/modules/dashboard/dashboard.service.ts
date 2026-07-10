@@ -1,4 +1,4 @@
-import { dashboardRepository } from './dashboard.repository';
+import { dashboardRepository } from './dashboard.repository.js';
 
 export class DashboardService {
   async getStats(candidateId: number) {

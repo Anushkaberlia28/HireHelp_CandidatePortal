@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { resumeService } from './resume.service';
+import { resumeService } from './resume.service.js';
 
 declare global {
   namespace Express {

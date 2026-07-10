@@ -11,10 +11,17 @@
         "test": "npm test -w client && npm test -w server",
         "dev": "concurrently -n server,client -c blue,green \"npm run dev -w server\" \"npm run dev -w client\"",
         "dev:client": "npm run dev -w client",
-        "dev:server": "npm run dev -w server"
+        "dev:server": "npm run dev -w server",
+        "db:generate": "drizzle-kit generate",
+        "db:migrate": "drizzle-kit migrate",
+        "db:studio": "drizzle-kit studio",
+        "db:push": "drizzle-kit push"
     },
     "devDependencies": {
         "concurrently": "^9.1.2",
-        "drizzle-kit": "^0.31.10"
+        "drizzle-kit": "^0.18.1"
+    },
+    "dependencies": {
+        "@typescript-eslint/parser": "8.63.0"
     }
 }

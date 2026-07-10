@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { interviewStatusService } from './interview-status.service';
-import { UpdateInterviewStatusInput } from './interview-status.schema';
+import { interviewStatusService } from './interview-status.service.js';
+import { UpdateInterviewStatusInput } from './interview-status.schema.js';
 
 export class InterviewStatusController {
   async list(req: Request, res: Response) {

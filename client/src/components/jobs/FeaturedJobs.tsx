@@ -3,8 +3,8 @@ import { Search } from "lucide-react";
 
 import JobCard from "./JobCard";
 import Loader from "@/components/ui/Loader";
-import { getJobs } from "@/services/jobs.api";
-import { applyToJob } from "@/services/applications.api";
+import { getJobs } from "@/api/jobs.api";
+import { applyToJob } from "@/api/applications.api";
 import type { Job } from "@/types";
 
 export default function FeaturedJobs() {

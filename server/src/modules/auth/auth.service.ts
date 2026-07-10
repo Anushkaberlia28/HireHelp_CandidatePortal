@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { authRepository } from './auth.repository';
+import { authRepository } from './auth.repository.js';
 // import { publishCandidateRegistered } from '../events/kafka-producer';
-import { RegisterInput, LoginInput } from './auth.schema';
+import { RegisterInput, LoginInput } from './auth.schema.js';
 
 export class AuthService {
   async register(data: RegisterInput) {
