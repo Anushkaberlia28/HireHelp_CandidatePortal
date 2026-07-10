@@ -12,6 +12,10 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import PasswordInput from "@/components/ui/PasswordInput";
 
+type RegisterFormValues = RegisterRequest & {
+    confirmPassword: string;
+};
+
 export default function Register() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -20,28 +24,35 @@ export default function Register() {
     const {
         register: registerField,
         handleSubmit,
+        watch,
         formState: { errors, isSubmitting },
-    } = useForm<RegisterRequest>({
+    } = useForm<RegisterFormValues>({
         defaultValues: {
-            fullName: "",
+            firstName: "",
+            lastName: "",
             email: "",
             password: "",
+            phone: "",
             confirmPassword: "",
         },
     });
 
-    async function onSubmit(values: RegisterRequest) {
+    const password = watch("password");
+
+    async function onSubmit(values: RegisterFormValues) {
         setServerError(null);
         dispatch(loginStart());
 
         try {
-            const response = await register(values);
+            const { confirmPassword, ...payload } = values;
+
+            const response = await register(payload);
 
             dispatch(
                 loginSuccess({
                     user: response.user,
                     token: response.accessToken,
-                })
+                }),
             );
 
             navigate("/dashboard");
@@ -58,9 +69,9 @@ export default function Register() {
 
     return (
         <Card>
-            <h1 className="text-3xl font-bold mb-2">Create Account</h1>
+            <h1 className="mb-2 text-3xl font-bold">Create Account</h1>
 
-            <p className="text-gray-500 mb-8">Join HireHelp today.</p>
+            <p className="mb-8 text-gray-500">Join HireHelp today.</p>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 {serverError && (
@@ -69,83 +80,117 @@ export default function Register() {
                     </div>
                 )}
 
-                <Input
-                    label="Full Name"
-                    placeholder="Enter your full name"
-                    {...registerField("fullName", {
-                        required: "Full name is required.",
-                        minLength: {
-                            value: 2,
-                            message: "Full name is too short.",
-                        },
-                    })}
-                />
-                {errors.fullName && (
-                    <p className="text-sm text-rose-400">{errors.fullName.message}</p>
-                )}
+                <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                        <Input
+                            label="First Name"
+                            placeholder="Enter your first name"
+                            {...registerField("firstName", {
+                                required: "First name is required.",
+                            })}
+                        />
+                        {errors.firstName && (
+                            <p className="mt-1 text-sm text-rose-400">
+                                {errors.firstName.message}
+                            </p>
+                        )}
+                    </div>
 
-                <Input
-                    label="Email"
-                    type="email"
-                    placeholder="Enter your email"
-                    {...registerField("email", {
-                        required: "Email is required.",
-                        pattern: {
-                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: "Please enter a valid email address.",
-                        },
-                    })}
-                />
-                {errors.email && (
-                    <p className="text-sm text-rose-400">{errors.email.message}</p>
-                )}
-
-                <PasswordInput
-                    placeholder="Create a password"
-                    {...registerField("password", {
-                        required: "Password is required.",
-                        minLength: {
-                            value: 6,
-                            message: "Password must be at least 6 characters.",
-                        },
-                    })}
-                />
-
-                <div className="-mt-4 mb-1 text-sm text-slate-300">Password</div>
-
-                {errors.password && (
-                    <p className="text-sm text-rose-400">{errors.password.message}</p>
-                )}
-
-                <PasswordInput
-                    placeholder="Confirm your password"
-                    {...registerField("confirmPassword", {
-                        required: "Confirm password is required.",
-                        validate: (value, formValues) =>
-                            value === formValues.password || "Passwords do not match.",
-                    })}
-                />
-
-                <div className="-mt-4 mb-1 text-sm text-slate-300">
-                    Confirm Password
+                    <div>
+                        <Input
+                            label="Last Name"
+                            placeholder="Enter your last name"
+                            {...registerField("lastName", {
+                                required: "Last name is required.",
+                            })}
+                        />
+                        {errors.lastName && (
+                            <p className="mt-1 text-sm text-rose-400">
+                                {errors.lastName.message}
+                            </p>
+                        )}
+                    </div>
                 </div>
 
-                {errors.confirmPassword && (
-                    <p className="text-sm text-rose-400">{errors.confirmPassword.message}</p>
-                )}
+                <div>
+                    <Input
+                        label="Email"
+                        type="email"
+                        placeholder="Enter your email"
+                        {...registerField("email", {
+                            required: "Email is required.",
+                            pattern: {
+                                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                message: "Invalid email address.",
+                            },
+                        })}
+                    />
+                    {errors.email && (
+                        <p className="mt-1 text-sm text-rose-400">{errors.email.message}</p>
+                    )}
+                </div>
+
+                <div>
+                    <Input
+                        label="Phone (Optional)"
+                        placeholder="Enter your phone number"
+                        {...registerField("phone")}
+                    />
+                </div>
+
+                <div>
+                    <PasswordInput
+                        placeholder="Create a password"
+                        {...registerField("password", {
+                            required: "Password is required.",
+                            minLength: {
+                                value: 8,
+                                message: "Password must be at least 8 characters.",
+                            },
+                        })}
+                    />
+
+                    <div className="-mt-4 mb-1 text-sm text-slate-300">Password</div>
+
+                    {errors.password && (
+                        <p className="mt-1 text-sm text-rose-400">
+                            {errors.password.message}
+                        </p>
+                    )}
+                </div>
+
+                <div>
+                    <PasswordInput
+                        placeholder="Confirm your password"
+                        {...registerField("confirmPassword", {
+                            required: "Please confirm your password.",
+                            validate: (value) =>
+                                value === password || "Passwords do not match.",
+                        })}
+                    />
+
+                    <div className="-mt-4 mb-1 text-sm text-slate-300">
+                        Confirm Password
+                    </div>
+
+                    {errors.confirmPassword && (
+                        <p className="mt-1 text-sm text-rose-400">
+                            {errors.confirmPassword.message}
+                        </p>
+                    )}
+                </div>
 
                 <Button type="submit" loading={isSubmitting}>
                     Register
                 </Button>
             </form>
 
-            <p className="text-center mt-6">
+            <p className="mt-6 text-center">
                 Already have an account?{" "}
-                <Link to="/login" className="text-blue-600 font-semibold">
+                <Link to="/login" className="font-semibold text-blue-600">
                     Login
                 </Link>
             </p>
         </Card>
     );
 }
-
