@@ -4,11 +4,16 @@ Paste this at the top of the repo (e.g. `AGENTS.md` or `CLAUDE.md`) so any AI ag
 
 ---
 
+### Project context
+This repo is one of 9 microservices that make up **HireHelp**, an AI-assisted recruitment platform. Recruiters publish job requisitions, candidates apply, an AI service scores and helps screen applicants, interviewers give structured feedback, and rejected candidates are archived into a searchable talent pool instead of being lost. All 9 services sit behind a single `api-gateway` and communicate via REST or Kafka events — never via direct cross-service database access.
+This document only describes **this repo's** scope and conventions. Do not infer or build functionality that belongs to another service — check the "Scope of this repo" section below before writing code that touches another domain.
+
 ### Scope of this repo
 This repo owns the **candidate** domain only: candidate auth, profile, resume, applications, dashboard, and candidate-facing notifications. It does **not** own job/requisition data (read it from `recruitment-service`), AI scoring (read it from `ai-evaluation-service`), or interview scheduling (read it from `interview-service`).
 
 ### Tech stack — do not deviate
-- **Express.js + TypeScript** (not NestJS, not Fastify)
+- **Backend:** Express.js + TypeScript (not NestJS, not Fastify)
+- **Frontend:** React + TypeScript + Vite + Tailwind + Shadcn UI
 - **Drizzle ORM** (not Prisma, not TypeORM) against this service's own **PostgreSQL** database
 - Validation with **Zod**
 - Tests with **Jest**
@@ -17,6 +22,24 @@ This repo owns the **candidate** domain only: candidate auth, profile, resume, a
 ### Folder structure — follow exactly, don't reorganize
 ```
 candidate-service/
+├── client/
+│   ├── src/
+│   │   ├── pages/
+│   │   │   └── Login.tsx
+│   │   │   └── Register.tsx
+│   │   │   └── Dashboard.tsx
+│   │   │   └── ProfileForm.tsx
+│   │   │   └── ResumeUpload.tsx
+│   │   │   └── ApplicationList.tsx
+│   │   │   └── ApplicationDetail.tsx
+│   │   │   └── NotificationBell.tsx
+│   │   │   └── InterviewStatus.tsx
+│   │   │   └── AccountSettings.tsx
+│   │   ├── components/     shared UI pieces for this service's own pages
+│   │   ├── api/             typed calls to this service's routes, via api-gateway
+│   │   └── main.tsx
+│   ├── package.json
+│   └── vite.config.ts
 ├── server/
 │   ├── config/         env loading, db client, constants
 │   ├── common/
@@ -83,13 +106,20 @@ candidate-service/
 │   ├── routes.ts       combines every module's router
 │   ├── app.ts           express() instance, global middleware, mounts routes.ts
 │   └── index.ts          imports app, app.listen(PORT)
-├── package.json
+├── package.json          (server-level; client has its own)
 ├── tsconfig.json
-├── Dockerfile
+├── Dockerfile             multi-stage: builds client/ and server/
 ├── .env.example
 └── README.md
 ```
 Every module = `*.routes.ts` + `*.controller.ts` + `*.service.ts` + `*.repository.ts` (Drizzle queries live only in `*.repository.ts`, never in controllers) + `*.schema.ts` (Zod) + `*.spec.ts`.
+
+### Frontend (`client/`)
+- **Stack:** React + TypeScript + Vite + Tailwind CSS + Shadcn UI — same across all 9 repos, for visual consistency
+- **Pages owned by this service's frontend:** Login, Register, Dashboard, ProfileForm, ResumeUpload, ApplicationList, ApplicationDetail, NotificationBell, InterviewStatus, AccountSettings
+- All API calls live in `client/src/api/*.ts` — no inline `fetch`/`axios` calls inside components
+- This frontend calls **only this service's own backend** (through `api-gateway`) — never call another service's API directly from a component; if the page needs cross-domain data (e.g. candidate viewing offer status), that data comes back through this service's own backend, which internally calls the other service
+- Shared design tokens/components: team has not yet decided between a shared `@hirehelp/ui` package or per-repo styling — confirm before introducing new base components (buttons, inputs, cards) so all 9 frontends don't drift visually
 
 ### API contract rules
 - Every route validated with a Zod schema before it touches a controller.
@@ -99,7 +129,6 @@ Every module = `*.routes.ts` + `*.controller.ts` + `*.service.ts` + `*.repositor
 ### Auth rules
 - Candidate auth is **separate** from recruiter/admin auth (different JWT issuer/audience) — do not merge these flows.
 - Resume files go to S3/MinIO via `resume.service.ts`; never store binary data in Postgres.
-
 
 ### Kafka events
 - **Publishes:** `CandidateRegistered`, `ResumeUploaded`
@@ -121,7 +150,7 @@ Every module = `*.routes.ts` + `*.controller.ts` + `*.service.ts` + `*.repositor
 - Every new endpoint gets a matching `.spec.ts` before merge
 
 ### Before opening a PR
-- `npm run lint && npm run test` passes locally
+- `npm run lint && npm run test` passes locally (both `client/` and `server/`)
 - New/changed routes reflected in the service's README (publishes/consumes list, endpoint list)
 - No `.env` values or secrets committed
 - If a Kafka event was added or changed, ping the team — don't assume other services will auto-adapt
