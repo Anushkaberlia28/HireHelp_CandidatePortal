@@ -1,37 +1,13 @@
-import { Router } from "express";
-import { authenticate } from "../../../middleware/auth.middleware.js";
-import {
-  createApplication,
-  getApplicationsByUserId,
-} from "../services/applications.service.js";
+import { Router } from 'express';
+import { applicationsController } from '../applications.controller';
+import { authenticate } from '../../../common/middleware/auth';
+import { validate } from '../../../common/middleware/validate';
+import { applyJobSchema } from '../applications.schema';
 
 const router = Router();
 
-router.use(authenticate);
-
-router.get("/", async (req, res) => {
-  try {
-    const applications = await getApplicationsByUserId(req.userId!);
-    res.json(applications);
-  } catch {
-    res.status(500).json({ message: "Failed to fetch applications" });
-  }
-});
-
-router.post("/", async (req, res) => {
-  try {
-    const { jobId } = req.body;
-    if (!jobId) {
-      return res.status(400).json({ message: "jobId is required." });
-    }
-
-    const application = await createApplication(req.userId!, jobId);
-    res.status(201).json(application);
-  } catch (error) {
-    res.status(400).json({
-      message: error instanceof Error ? error.message : "Failed to apply",
-    });
-  }
-});
+router.get('/', authenticate, applicationsController.list);
+router.get('/:id', authenticate, applicationsController.getById);
+router.post('/', authenticate, validate(applyJobSchema), applicationsController.apply);
 
 export default router;

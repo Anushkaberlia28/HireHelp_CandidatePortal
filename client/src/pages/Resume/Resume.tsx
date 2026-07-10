@@ -19,36 +19,45 @@ export default function ResumePage() {
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
-    async function loadResume() {
-        try {
-            const [resumeData, analyticsData] = await Promise.all([
-                getResume(),
-                getResumeAnalytics(),
-            ]);
-            setResume(resumeData);
-            setAnalytics(analyticsData);
-            setError(null);
-        } catch (err) {
-            setResume(null);
-            setAnalytics(null);
-            setError(
-                err instanceof Error ? err.message : "Failed to load resume"
-            );
-        }
-    }
+    const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
-        loadResume().finally(() => setLoading(false));
-    }, []);
+        let cancelled = false;
+
+        Promise.resolve()
+            .then(() => {
+                if (cancelled) return;
+                setLoading(true);
+            })
+            .then(() => Promise.all([getResume(), getResumeAnalytics()]))
+            .then(([resumeData, analyticsData]) => {
+                if (cancelled) return;
+                setResume(resumeData);
+                setAnalytics(analyticsData);
+                setError(null);
+            })
+            .catch((err) => {
+                if (cancelled) return;
+                setResume(null);
+                setAnalytics(null);
+                setError(err instanceof Error ? err.message : "Failed to load resume");
+            })
+            .finally(() => {
+                if (cancelled) return;
+                setLoading(false);
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [refreshKey]);
 
     async function handleUpload(fileName: string) {
         setUploading(true);
         try {
-            const uploaded = await uploadResume(fileName);
-            setResume(uploaded);
-            setAnalytics(await getResumeAnalytics());
+            await uploadResume(fileName);
             setError(null);
+            setRefreshKey((k) => k + 1);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Failed to upload resume");
         } finally {

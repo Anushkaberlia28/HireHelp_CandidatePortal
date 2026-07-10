@@ -1,33 +1,15 @@
-import { Router } from "express";
-import { authenticate } from "../../../middleware/auth.middleware.js";
-import { getProfile, updateProfile } from "../services/profile.service.js";
+import { Router } from 'express';
+import { profileController } from '../profile.controller';
+import { authenticate } from '../../../common/middleware/auth';
+import { validate } from '../../../common/middleware/validate';
+import { updateProfileSchema, experienceSchema, educationSchema, skillSchema } from '../profile.schema';
 
 const router = Router();
 
-router.use(authenticate);
-
-router.get("/", async (req, res) => {
-  try {
-    const profile = await getProfile(req.userId!);
-    if (!profile) {
-      return res.status(404).json({ message: "Profile not found." });
-    }
-    res.json(profile);
-  } catch {
-    res.status(500).json({ message: "Failed to fetch profile" });
-  }
-});
-
-router.put("/", async (req, res) => {
-  try {
-    const profile = await updateProfile(req.userId!, req.body);
-    if (!profile) {
-      return res.status(404).json({ message: "Profile not found." });
-    }
-    res.json(profile);
-  } catch {
-    res.status(500).json({ message: "Failed to update profile" });
-  }
-});
+router.get('/', authenticate, profileController.getProfile);
+router.put('/', authenticate, validate(updateProfileSchema), profileController.updateProfile);
+router.post('/experience', authenticate, validate(experienceSchema), profileController.addExperience);
+router.post('/education', authenticate, validate(educationSchema), profileController.addEducation);
+router.post('/skills', authenticate, validate(skillSchema), profileController.addSkill);
 
 export default router;

@@ -1,37 +1,13 @@
-import { Router } from "express";
-import { login, register, getMe } from "../services/auth.service.js";
+import { Router } from 'express';
+import { authController } from '../auth.controller';
+import { authenticate } from '../../../common/middleware/auth';
+import { validate } from '../../../common/middleware/validate';
+import { registerSchema, loginSchema } from '../auth.schema';
 
 const router = Router();
 
-router.post("/login", async (req, res) => {
-  try {
-    const result = await login(req.body);
-    res.json(result);
-  } catch (error) {
-    res.status(400).json({ message: error instanceof Error ? error.message : "Login failed" });
-  }
-});
-
-router.post("/register", async (req, res) => {
-  try {
-    const result = await register(req.body);
-    res.json(result);
-  } catch (error) {
-    res.status(400).json({ message: error instanceof Error ? error.message : "Registration failed" });
-  }
-});
-
-router.get("/me", async (req, res) => {
-  try {
-    const authorization = req.headers.authorization;
-    const token = authorization?.split(" ")[1] || "";
-    const user = await getMe(token);
-
-    res.json({ user });
-  } catch (error) {
-    res.status(401).json({ message: error instanceof Error ? error.message : "Unauthorized" });
-  }
-});
+router.post('/register', validate(registerSchema), authController.register);
+router.post('/login', validate(loginSchema), authController.login);
+router.get('/me', authenticate, authController.me);
 
 export default router;
-
