@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 import AuthLayout from "@/layouts/AuthLayout";
 import DashboardLayout from "@/layouts/DashboardLayout";
+import ProtectedRoute from "@/routes/ProtectedRoute";
 
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
@@ -25,7 +26,13 @@ export default function AppRouter() {
             </Route>
 
             {/* Protected Routes */}
-            <Route element={<DashboardLayout />}>
+            <Route
+                element={
+                    <ProtectedRoute>
+                        <DashboardLayout />
+                    </ProtectedRoute>
+                }
+            >
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/resume" element={<Resume />} />

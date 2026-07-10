@@ -1,11 +1,17 @@
 export const API = {
-    BASE_URL: "http://localhost:5001/api",
+    BASE_URL: import.meta.env.VITE_API_URL || "/api",
 
     AUTH: {
         LOGIN: "/auth/login",
         REGISTER: "/auth/register",
-        LOGOUT: "/auth/logout",
-        PROFILE: "/auth/profile",
+        ME: "/auth/me",
     },
-};
 
+    JOBS: "/jobs",
+    APPLICATIONS: "/applications",
+    DASHBOARD: "/dashboard",
+    PROFILE: "/profile",
+    RESUME: "/resume",
+    NOTIFICATIONS: "/notifications",
+    INTERVIEWS: "/interviews",
+};

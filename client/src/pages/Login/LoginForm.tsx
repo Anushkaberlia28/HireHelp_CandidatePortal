@@ -78,12 +78,12 @@ export default function LoginForm() {
             )}
 
             <PasswordInput
-                label="Password"
                 placeholder="Enter your password"
                 {...register("password", {
                     required: "Password is required.",
                 })}
             />
+
             {errors.password && (
                 <p className="text-sm text-rose-400">{errors.password.message}</p>
             )}

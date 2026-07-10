@@ -1,31 +1,40 @@
 import InterviewCard from "./InterviewCard";
+import type { Interview } from "@/types";
 
-const interviews = [
-    {
-        company: "Google",
-        role: "Frontend Developer",
-        interviewer: "Sarah Johnson",
-        date: "20 July 2026",
-        time: "10:30 AM",
-        meetingLink: "https://meet.google.com/",
-    },
-    {
-        company: "Microsoft",
-        role: "Software Engineer",
-        interviewer: "David Lee",
-        date: "22 July 2026",
-        time: "2:00 PM",
-        meetingLink: "https://teams.microsoft.com/",
-    },
-];
+interface Props {
+    interviews: Interview[];
+}
 
-export default function InterviewList() {
+function formatDate(date: string) {
+    const parsed = new Date(date);
+    if (Number.isNaN(parsed.getTime())) {
+        return date;
+    }
+
+    return parsed.toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    });
+}
+
+export default function InterviewList({ interviews }: Props) {
+    if (interviews.length === 0) {
+        return <p className="text-slate-400">No interviews scheduled yet.</p>;
+    }
+
     return (
         <div className="space-y-6">
             {interviews.map((item) => (
                 <InterviewCard
-                    key={item.company}
-                    {...item}
+                    key={item.id}
+                    company={item.company}
+                    role={item.role}
+                    interviewer={item.interviewer}
+                    date={formatDate(item.date)}
+                    time={item.time}
+                    meetingLink={item.meetingLink}
+                    status={item.status}
                 />
             ))}
         </div>

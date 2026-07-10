@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
     BriefcaseBusiness,
     FileText,
@@ -13,8 +14,36 @@ import NotificationsPanel from "@/components/dashboard/NotificationsPanel";
 
 import Card from "@/components/ui/Card";
 import PageTitle from "@/components/ui/PageTitle";
+import Loader from "@/components/ui/Loader";
+import { getDashboard } from "@/services/dashboard.api";
+import type { DashboardData } from "@/types";
 
 export default function Dashboard() {
+    const [data, setData] = useState<DashboardData | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        getDashboard()
+            .then(setData)
+            .catch((err) =>
+                setError(err instanceof Error ? err.message : "Failed to load dashboard")
+            )
+            .finally(() => setLoading(false));
+    }, []);
+
+    if (loading) {
+        return <Loader />;
+    }
+
+    if (error || !data) {
+        return (
+            <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-rose-200">
+                {error ?? "Failed to load dashboard"}
+            </div>
+        );
+    }
+
     return (
         <div className="space-y-8">
             <PageTitle
@@ -22,38 +51,36 @@ export default function Dashboard() {
                 subtitle="Welcome back! Here's your hiring activity."
             />
 
-            {/* Stats */}
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
                 <StatCard
                     title="Applications"
-                    value="28"
+                    value={String(data.stats.totalApplications)}
                     icon={BriefcaseBusiness}
                     color="bg-blue-600"
                 />
 
                 <StatCard
                     title="Resume Score"
-                    value="91%"
+                    value={`${data.stats.resumeScore}%`}
                     icon={FileText}
                     color="bg-green-600"
                 />
 
                 <StatCard
                     title="Interviews"
-                    value="6"
+                    value={String(data.stats.interviewsScheduled)}
                     icon={CalendarDays}
                     color="bg-purple-600"
                 />
 
                 <StatCard
                     title="Notifications"
-                    value="12"
+                    value={String(data.stats.unreadNotifications)}
                     icon={Bell}
                     color="bg-orange-600"
                 />
             </div>
 
-            {/* Top Widgets */}
             <div className="grid gap-6 lg:grid-cols-3">
                 <Card>
                     <h2 className="mb-5 text-lg font-semibold text-white">
@@ -61,7 +88,10 @@ export default function Dashboard() {
                     </h2>
 
                     <div className="h-3 w-full rounded-full bg-slate-700">
-                        <div className="h-3 w-[78%] rounded-full bg-gradient-to-r from-blue-500 to-cyan-400" />
+                        <div
+                            className="h-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400"
+                            style={{ width: `${data.profileCompletion}%` }}
+                        />
                     </div>
 
                     <div className="mt-4 flex items-center justify-between">
@@ -69,7 +99,9 @@ export default function Dashboard() {
                             Complete your profile to improve visibility.
                         </span>
 
-                        <span className="font-bold text-blue-400">78%</span>
+                        <span className="font-bold text-blue-400">
+                            {data.profileCompletion}%
+                        </span>
                     </div>
                 </Card>
 
@@ -78,21 +110,33 @@ export default function Dashboard() {
                         Upcoming Interview
                     </h2>
 
-                    <div className="space-y-3">
-                        <h3 className="text-xl font-semibold text-white">
-                            Frontend Developer
-                        </h3>
+                    {data.upcomingInterview ? (
+                        <div className="space-y-3">
+                            <h3 className="text-xl font-semibold text-white">
+                                {data.upcomingInterview.role}
+                            </h3>
 
-                        <p className="text-slate-400">Google</p>
+                            <p className="text-slate-400">
+                                {data.upcomingInterview.company}
+                            </p>
 
-                        <p className="font-medium text-blue-400">
-                            Tomorrow • 10:30 AM
-                        </p>
+                            <p className="font-medium text-blue-400">
+                                {data.upcomingInterview.formattedDate ??
+                                    `${data.upcomingInterview.date} • ${data.upcomingInterview.time}`}
+                            </p>
 
-                        <button className="mt-3 rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-700">
-                            View Details
-                        </button>
-                    </div>
+                            <a
+                                href={data.upcomingInterview.meetingLink}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="mt-3 inline-block rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-700"
+                            >
+                                Join Meeting
+                            </a>
+                        </div>
+                    ) : (
+                        <p className="text-slate-400">No upcoming interviews.</p>
+                    )}
                 </Card>
 
                 <Card>
@@ -102,34 +146,38 @@ export default function Dashboard() {
 
                     <div className="space-y-3">
                         <p className="font-semibold text-green-400">
-                            ✓ Resume Uploaded
+                            {data.resumeStatus.uploaded
+                                ? "✓ Resume Uploaded"
+                                : "No resume uploaded yet"}
                         </p>
 
-                        <p className="text-slate-400">
-                            ATS Score: <span className="text-white font-semibold">91%</span>
-                        </p>
+                        {data.resumeStatus.uploaded && (
+                            <>
+                                <p className="text-slate-400">
+                                    ATS Score:{" "}
+                                    <span className="font-semibold text-white">
+                                        {data.resumeStatus.score}%
+                                    </span>
+                                </p>
 
-                        <p className="text-slate-400">
-                            Last updated 2 days ago.
-                        </p>
-
-                        <button className="rounded-lg border border-slate-700 px-4 py-2 text-white transition hover:bg-slate-800">
-                            Update Resume
-                        </button>
+                                <p className="text-slate-400">
+                                    {data.resumeStatus.fileName}
+                                </p>
+                            </>
+                        )}
                     </div>
                 </Card>
             </div>
 
-            {/* Bottom Section */}
             <div className="grid gap-6 xl:grid-cols-3">
                 <div className="space-y-6 xl:col-span-2">
-                    <RecentApplications />
-                    <RecommendedJobs />
-                    <ActivityTimeline />
+                    <RecentApplications applications={data.recentApplications} />
+                    <RecommendedJobs jobs={data.recommendedJobs} />
+                    <ActivityTimeline activities={data.activityTimeline} />
                 </div>
 
                 <div>
-                    <NotificationsPanel />
+                    <NotificationsPanel notifications={data.notifications} />
                 </div>
             </div>
         </div>

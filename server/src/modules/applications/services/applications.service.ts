@@ -1,70 +1,56 @@
 import { randomUUID } from "crypto";
-import { Application } from "../../../types/index.js";
-
-const applications: Application[] = [
-  {
-    id: "1",
-    userId: "user-1",
-    jobId: "1",
-    company: "Google",
-    role: "Frontend Developer",
-    location: "Mountain View, CA",
-    appliedDate: "2024-01-15",
-    status: "Interview",
-  },
-  {
-    id: "2",
-    userId: "user-1",
-    jobId: "2",
-    company: "Meta",
-    role: "React Developer",
-    location: "Menlo Park, CA",
-    appliedDate: "2024-01-20",
-    status: "Applied",
-  },
-  {
-    id: "3",
-    userId: "user-1",
-    jobId: "3",
-    company: "Amazon",
-    role: "Software Engineer",
-    location: "Seattle, WA",
-    appliedDate: "2024-01-25",
-    status: "Rejected",
-  },
-];
+import type { Application } from "../../../types/index.js";
+import { userApplications } from "../../../data/seed.js";
+import { getJobById } from "../../jobs/services/jobs.service.js";
 
 export async function getApplicationsByUserId(userId: string) {
-  return applications.filter((app) => app.userId === userId);
+  return userApplications.get(userId) ?? [];
 }
 
-export async function getApplicationById(id: string) {
-  return applications.find((app) => app.id === id) || null;
+export async function getApplicationById(userId: string, id: string) {
+  const applications = userApplications.get(userId) ?? [];
+  return applications.find((app) => app.id === id) ?? null;
 }
 
-export async function createApplication(data: Omit<Application, "id">) {
+export async function createApplication(userId: string, jobId: string) {
+  const job = await getJobById(jobId);
+  if (!job) {
+    throw new Error("Job not found.");
+  }
+
+  const applications = userApplications.get(userId) ?? [];
+  const existing = applications.find((app) => app.jobId === jobId);
+  if (existing) {
+    throw new Error("You have already applied to this job.");
+  }
+
   const application: Application = {
     id: randomUUID(),
-    ...data,
+    userId,
+    jobId,
+    company: job.company,
+    role: job.role,
+    location: job.location,
+    appliedDate: new Date().toISOString().split("T")[0],
+    status: "Applied",
   };
+
   applications.push(application);
+  userApplications.set(userId, applications);
   return application;
 }
 
-export async function updateApplicationStatus(id: string, status: Application["status"]) {
+export async function updateApplicationStatus(
+  userId: string,
+  id: string,
+  status: Application["status"]
+) {
+  const applications = userApplications.get(userId) ?? [];
   const application = applications.find((app) => app.id === id);
-  if (application) {
-    application.status = status;
-    return application;
+  if (!application) {
+    return null;
   }
-  return null;
-}
 
-export async function deleteApplication(id: string) {
-  const index = applications.findIndex((app) => app.id === id);
-  if (index !== -1) {
-    applications.splice(index, 1);
-    return true;
-  }
-  return false;
+  application.status = status;
+  return application;
 }

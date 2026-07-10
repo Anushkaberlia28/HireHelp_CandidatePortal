@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { env } from "../../../config/env.js";
+import { seedUserData } from "../../../data/seed.js";
+import { getProfile } from "../../profile/services/profile.service.js";
 import { createUser, findUserByEmail, findUserById } from "../models/user.model.js";
 
 const JWT_SECRET = env.JWT_SECRET;
@@ -30,6 +32,7 @@ export async function register(data: RegisterInput) {
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await createUser({ fullName, email, password: hashedPassword });
+  seedUserData(user.id, fullName, email);
   const accessToken = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
 
   return { user: { id: user.id, fullName: user.fullName, email: user.email }, accessToken };
@@ -50,6 +53,10 @@ export async function login(data: LoginInput) {
   const user = await findUserByEmail(email);
   if (!user) {
     throw new Error("Invalid email or password.");
+  }
+
+  if (!(await getProfile(user.id))) {
+    seedUserData(user.id, user.fullName, user.email);
   }
 
   const validPassword = await bcrypt.compare(password, user.password);

@@ -1,43 +1,42 @@
 import ApplicationCard from "./ApplicationCard";
+import type { Application } from "@/types";
 
-const applications = [
-    {
-        company: "Google",
-        role: "Frontend Developer",
-        location: "Bangalore",
-        appliedDate: "2 days ago",
-        status: "Interview",
-    },
-    {
-        company: "Microsoft",
-        role: "React Developer",
-        location: "Hyderabad",
-        appliedDate: "5 days ago",
-        status: "Applied",
-    },
-    {
-        company: "Amazon",
-        role: "Software Engineer",
-        location: "Pune",
-        appliedDate: "1 week ago",
-        status: "Rejected",
-    },
-    {
-        company: "Netflix",
-        role: "Frontend Engineer",
-        location: "Remote",
-        appliedDate: "Today",
-        status: "Offer",
-    },
-] as const;
+interface Props {
+    applications: Application[];
+}
 
-export default function ApplicationTable() {
+function formatDate(date: string) {
+    const parsed = new Date(date);
+    if (Number.isNaN(parsed.getTime())) {
+        return date;
+    }
+
+    return parsed.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
+}
+
+export default function ApplicationTable({ applications }: Props) {
+    if (applications.length === 0) {
+        return (
+            <p className="text-slate-400">
+                No applications yet. Browse jobs and apply to get started.
+            </p>
+        );
+    }
+
     return (
         <div className="space-y-6">
             {applications.map((app) => (
                 <ApplicationCard
-                    key={app.company + app.role}
-                    {...app}
+                    key={app.id}
+                    company={app.company}
+                    role={app.role}
+                    location={app.location}
+                    appliedDate={formatDate(app.appliedDate)}
+                    status={app.status}
                 />
             ))}
         </div>

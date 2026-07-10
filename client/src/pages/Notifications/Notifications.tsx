@@ -1,27 +1,68 @@
-import PageTitle from "@/components/ui/PageTitle";
+import { useEffect, useState } from "react";
 
+import PageTitle from "@/components/ui/PageTitle";
 import NotificationList from "@/components/notifications/NotificationList";
 import NotificationStats from "@/components/notifications/NotificationStats";
+import Loader from "@/components/ui/Loader";
+import {
+    getNotifications,
+    getNotificationStats,
+    markAllNotificationsRead,
+} from "@/services/notifications.api";
+import type { Notification, NotificationStats as NotificationStatsType } from "@/types";
 
 export default function Notifications() {
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [stats, setStats] = useState<NotificationStatsType | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        Promise.all([getNotifications(), getNotificationStats()])
+            .then(([notificationData, statsData]) => {
+                setNotifications(notificationData);
+                setStats(statsData);
+            })
+            .catch((err) =>
+                setError(err instanceof Error ? err.message : "Failed to load notifications")
+            )
+            .finally(() => setLoading(false));
+    }, []);
+
+    async function handleMarkAllRead() {
+        const updated = await markAllNotificationsRead();
+        setNotifications(updated);
+        setStats(await getNotificationStats());
+    }
+
+    if (loading) {
+        return <Loader />;
+    }
+
+    if (error) {
+        return (
+            <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-rose-200">
+                {error}
+            </div>
+        );
+    }
+
     return (
         <div className="space-y-8">
-
             <PageTitle
                 title="Notifications"
                 subtitle="Stay updated with your applications and interviews."
             />
 
             <div className="grid gap-6 xl:grid-cols-3">
-
                 <div className="xl:col-span-2">
-                    <NotificationList />
+                    <NotificationList notifications={notifications} />
                 </div>
 
-                <NotificationStats />
-
+                {stats && (
+                    <NotificationStats stats={stats} onMarkAllRead={handleMarkAllRead} />
+                )}
             </div>
-
         </div>
     );
 }

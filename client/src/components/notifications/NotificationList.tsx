@@ -1,36 +1,25 @@
 import NotificationCard from "./NotificationCard";
+import type { Notification } from "@/types";
 
-const notifications = [
-    {
-        title: "Interview Scheduled",
-        message: "Google scheduled your interview for tomorrow.",
-        time: "5 mins ago",
-        type: "interview",
-        unread: true,
-    },
-    {
-        title: "Application Viewed",
-        message: "Amazon recruiter viewed your application.",
-        time: "2 hours ago",
-        type: "job",
-        unread: true,
-    },
-    {
-        title: "Profile Updated",
-        message: "Your profile was updated successfully.",
-        time: "Yesterday",
-        type: "profile",
-        unread: false,
-    },
-] as const;
+interface Props {
+    notifications: Notification[];
+}
 
-export default function NotificationList() {
+export default function NotificationList({ notifications }: Props) {
+    if (notifications.length === 0) {
+        return <p className="text-slate-400">No notifications yet.</p>;
+    }
+
     return (
         <div className="space-y-5">
-            {notifications.map((notification, index) => (
+            {notifications.map((notification) => (
                 <NotificationCard
-                    key={index}
-                    {...notification}
+                    key={notification.id}
+                    title={notification.title}
+                    message={notification.message}
+                    time={notification.time}
+                    type={notification.type}
+                    unread={notification.unread}
                 />
             ))}
         </div>
