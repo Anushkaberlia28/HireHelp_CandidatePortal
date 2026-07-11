@@ -32,15 +32,19 @@ export default function LoginForm() {
     dispatch(loginStart());
 
     try {
-      const response = await login({
+const response = await login({
         email: values.email,
         password: values.password,
       });
 
+      console.log("[auth-debug] login response:", response);
+
+      const token = response.token ?? response.accessToken;
+
       dispatch(
         loginSuccess({
           user: response.user,
-          token: response.accessToken,
+          token: token as string,
         })
       );
 

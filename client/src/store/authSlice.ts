@@ -8,11 +8,13 @@ import type {
 
 const storedUserRaw =
     typeof window !== "undefined" ? localStorage.getItem("user") : null;
+// token is persisted by loginSuccess under the key "token"
 const storedToken =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
 let storedUser: User | null = null;
 try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     storedUser = storedUserRaw ? (JSON.parse(storedUserRaw) as User) : null;
 } catch {
     // If localStorage has corrupted/invalid JSON, treat as logged out.
@@ -24,7 +26,7 @@ try {
 
 const initialState: AuthState = {
     user: storedUser,
-    token: storedToken,
+    token: storedToken ? storedToken : null,
     isAuthenticated: Boolean(storedToken),
     loading: false,
     error: null,
@@ -43,7 +45,7 @@ const authSlice = createSlice({
             state.error = null;
         },
 
-        loginSuccess: (
+loginSuccess: (
             state,
             action: PayloadAction<{
                 user: User;
@@ -56,6 +58,7 @@ const authSlice = createSlice({
             state.loading = false;
             localStorage.setItem("token", action.payload.token);
             localStorage.setItem("user", JSON.stringify(action.payload.user));
+
         },
 
         loginFailure: (

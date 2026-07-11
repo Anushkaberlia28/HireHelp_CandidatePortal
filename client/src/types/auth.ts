@@ -19,7 +19,10 @@ export interface User {
 
 export interface AuthResponse {
     user: User;
-    accessToken: string;
+    // backend returns { token: string, candidate: {...} } (or { accessToken } in some versions)
+    accessToken?: string;
+    token?: string;
+    candidate?: User;
 }
 
 export interface AuthState {

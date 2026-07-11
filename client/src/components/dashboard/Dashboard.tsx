@@ -23,6 +23,15 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const resumeStatus =
+        data?.resumeStatus ?? ({
+            uploaded: false,
+            score: 0,
+            fileName: null,
+            lastUpdated: null,
+        } as DashboardData["resumeStatus"]);
+
+
     useEffect(() => {
         getDashboard()
             .then(setData)
@@ -146,38 +155,43 @@ export default function Dashboard() {
 
                     <div className="space-y-3">
                         <p className="font-semibold text-green-400">
-                            {data.resumeStatus.uploaded
+                            {resumeStatus.uploaded
                                 ? "✓ Resume Uploaded"
                                 : "No resume uploaded yet"}
                         </p>
 
-                        {data.resumeStatus.uploaded && (
+                        {resumeStatus.uploaded && (
                             <>
                                 <p className="text-slate-400">
                                     ATS Score:{" "}
                                     <span className="font-semibold text-white">
-                                        {data.resumeStatus.score}%
+                                        {resumeStatus.score}%
                                     </span>
                                 </p>
 
                                 <p className="text-slate-400">
-                                    {data.resumeStatus.fileName}
+                                    {resumeStatus.fileName}
                                 </p>
                             </>
                         )}
                     </div>
+
                 </Card>
             </div>
 
             <div className="grid gap-6 xl:grid-cols-3">
                 <div className="space-y-6 xl:col-span-2">
-                    <RecentApplications applications={data.recentApplications} />
-                    <RecommendedJobs jobs={data.recommendedJobs} />
-                    <ActivityTimeline activities={data.activityTimeline} />
+                    <RecentApplications applications={data.recentApplications ?? []} />
+                    <RecommendedJobs jobs={data.recommendedJobs ?? []} />
+                    <ActivityTimeline activities={data.activityTimeline ?? []} />
+
+
+
+
                 </div>
 
                 <div>
-                    <NotificationsPanel notifications={data.notifications} />
+                    <NotificationsPanel notifications={data.notifications ?? []} />
                 </div>
             </div>
         </div>

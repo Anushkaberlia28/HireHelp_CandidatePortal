@@ -9,17 +9,20 @@ interface Props {
 }
 
 export default function RecommendedJobs({ jobs }: Props) {
+    const safeJobs = jobs ?? [];
+
     return (
         <div className="rounded-2xl bg-slate-900 border border-slate-800 p-6">
+
             <h2 className="text-xl font-bold text-white mb-6">
                 Recommended Jobs
             </h2>
 
-            {jobs.length === 0 ? (
+            {safeJobs.length === 0 ? (
                 <p className="text-slate-400">No recommendations yet.</p>
             ) : (
                 <div className="space-y-5">
-                    {jobs.map((job) => (
+                    {safeJobs.map((job) => (
                         <div
                             key={job.id}
                             className="border-b border-slate-800 pb-4"

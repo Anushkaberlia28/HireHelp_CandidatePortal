@@ -109,8 +109,10 @@ export interface DashboardData {
     };
     recentApplications: Application[];
     recommendedJobs: { id: string; title: string; company: string }[];
+
     activityTimeline: string[];
     notifications: string[];
+
 }
 
 export interface InterviewStats {
