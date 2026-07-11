@@ -6,11 +6,24 @@ import type {
     User,
 } from "@/types/auth";
 
-const storedUser = typeof window !== "undefined" ? localStorage.getItem("user") : null;
-const storedToken = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+const storedUserRaw =
+    typeof window !== "undefined" ? localStorage.getItem("user") : null;
+const storedToken =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+let storedUser: User | null = null;
+try {
+    storedUser = storedUserRaw ? (JSON.parse(storedUserRaw) as User) : null;
+} catch {
+    // If localStorage has corrupted/invalid JSON, treat as logged out.
+    storedUser = null;
+    if (typeof window !== "undefined") {
+        localStorage.removeItem("user");
+    }
+}
 
 const initialState: AuthState = {
-    user: storedUser ? JSON.parse(storedUser) : null,
+    user: storedUser,
     token: storedToken,
     isAuthenticated: Boolean(storedToken),
     loading: false,
